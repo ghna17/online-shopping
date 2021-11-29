@@ -1,0 +1,121 @@
+# import mods
+from random import *
+
+
+# define functions
+def setMemb():
+    """retrieves the user's membership level"""
+	# use choice to pick randomly a membership level
+    memLev = choice(["Gold", "Silver", "Bronze"])
+    return memLev
+
+def setBal():
+    """retrieves the user's account balance"""
+    bal = randint(300, 400)
+    return bal
+
+def dispItem(memLev, itemList, item):
+	"""displays an item and its cost to the user according to membership level"""
+	print("-" * 50)
+	# display item name
+	print("Item #" + str(item + 1) + ": " + itemList[item][0])
+	# display item description
+	print(itemList[item][1])
+	# display item adjusted cost
+	print("The item's price we offer you is: $" + str(adjCost))
+
+def calcCost(memLev, itemList, item):
+	"""calculates discounts on an item's cost according to membership level"""
+	if memLev == "Gold":
+		newCost = round(itemList[item][2] * 0.5, 2)
+		return newCost
+	elif memLev == "Silver":
+		if itemList[item][2] >= 100:
+			newCost = round(itemList[item][2] * 0.8, 2)
+			return newCost
+		elif itemList[item][2] < 100 and itemList[item][2] >= 20:
+			newCost= round(itemList[item][2] * 0.9, 2)
+			return newCost
+		else:
+			return itemList[item][2]
+	elif memLev == "Bronze":
+		if itemList[item][2] >= 250:
+			newCost = round(itemList[item][2] * 0.9, 2)
+			return newCost
+		else:
+			newCost = round(itemList[item][2] * 0.95, 2)
+			return newCost
+
+def purch(bal, adjCost):
+	"""determines if the user can afford an item and give the right message to them"""
+	# create assession errors for user to get the right message
+	assert bal >= adjCost, "Your balance is insufficient"
+	if bal >= adjCost:
+		print("Congratulations! This item belongs to you!")
+		# calculate the user's balance
+		bal = round(bal - adjCost, 2)
+		return bal
+
+def cenChar(text,width):
+	"""centers a line full of a specific character"""
+	tlen = len(text)
+	spaces = int((width-tlen)/2+1)
+	print(" "*spaces + text)
+
+def cenText(lth, char, text, width):
+	"""centers texts with characters"""
+	times1 = (lth-2-len(text))//2
+	if len(text) % 2 == 0:
+		times2 = (lth-2-len(text))//2
+	else:
+		times2 = (lth-2-len(text))//2 + 1
+	cenChar(char + " " * times1 + text + " " * times2 + char, width)
+	
+def createBox(lth, char, width):
+	"creates a box to announce the user's information"
+	cenChar(char*lth, width)
+	cenText(lth, char, "Welcome to Fallove!", width)
+	cenText(lth, char, "Membership Level: " + memLev, width)
+	cenText(lth, char, "Current Balance: $" + str(bal), width)
+	cenChar(char*lth, width)
+
+# initialize variables
+name = input("Hi, What would you like to be called? >> ")
+item1 = "Cardigan"
+item1Pr = 89.99
+item1Des = "Rib-knit cardigan in cotton with a shawl collar, buttons at front, and ribbing at cuffs and hem helping you enjoy the autumn season."
+item2 = "Jacket"
+item2Pr = 111.99
+item2Des = "Jacket in grained leather with multiple pockets, and is suitable for you in outdoor activities."
+item3 = "Boots"
+item3Pr = 150
+item3Des = "This waterproof boots has a padded collar for added comfort and is built to feel sturdy on the job and during your down time."
+item4 = "Pants"
+item4Pr = 79.79
+item4Des = "Sweatpant joggers in cotton-blend fabric, waistband with covered elastic, and a drawstring created for your windy jogging day."
+item5 = "Jeans"
+item5Pr = 99.99
+item5Des = "5-pocket jeans in stretch cotton denim with regular waist, zip fly with button, and slim legs."
+itemLt = [[item1, item1Des, item1Pr], [item2, item2Des, item2Pr], [item3, item3Des, item3Pr], [item4, item4Des, item4Pr], [item5, item5Des, item5Pr]]
+
+memLev = setMemb()
+bal = setBal()
+createBox(40, "*", 50)
+
+#welcome user
+anm = "Welcome to our brand! We hope you have a great experience when shopping online with our website!"
+print(anm)
+
+# star a loop to display each item
+for i in range(len(itemLt)):
+	adjCost = calcCost(memLev, itemLt, i)
+	# display price and calculate cost of item
+	dispItem(memLev, itemLt, i)
+	# user decides to buy or not
+	choice = input("\nDo you want to buy this item? >> ")
+	assert choice in ["Yes", "No"], "You should input a right message"
+	if choice == "Yes":
+		bal = purch(bal, adjCost)
+		item5AdjCost = calcCost(memLev, itemLt, 4)
+		if bal >= item5AdjCost:
+			print("You are such a great customer!")
